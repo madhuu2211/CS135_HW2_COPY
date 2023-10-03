@@ -8,6 +8,12 @@ hard decisions against true binary labels, including:
 * positive predictive value and negative predictive value (PPV and NPV)
 '''
 
+'''
+SOURCES CITED:
+1. https://kawahara.ca/how-to-compute-truefalse-positives-and-truefalse-negatives-in-python-for-binary-classification-problems/
+
+'''
+
 import numpy as np
 
 def calc_TP_TN_FP_FN(ytrue_N, yhat_N):
@@ -57,12 +63,12 @@ def calc_TP_TN_FP_FN(ytrue_N, yhat_N):
     ytrue_N = np.asarray(ytrue_N, dtype=np.int32)
     yhat_N = np.asarray(yhat_N, dtype=np.int32)
     
-    # TODO fix by calculating the number of true pos, true neg, etc.
-    TP  = 0
-    TN = 0
-    FP = 0
-    FN = 0
-    return None  # TODO fix me
+    # fix by calculating the number of true pos, true neg, etc.
+    TP = np.sum(np.logical_and(yhat_N == 1, ytrue_N == 1))
+    TN = np.sum(np.logical_and(yhat_N == 0, ytrue_N == 0))
+    FP = np.sum(np.logical_and(yhat_N == 1, ytrue_N == 0))
+    FN = np.sum(np.logical_and(yhat_N == 0, ytrue_N == 1))
+    return TP,TN,FP,FN  
 
 
 def calc_ACC(ytrue_N, yhat_N):
@@ -98,7 +104,12 @@ def calc_ACC(ytrue_N, yhat_N):
     # You should *use* your calc_TP_TN_FP_FN function from above
     # Hint: make sure denominator will never be exactly zero
     # by adding a small value like 1e-10
-    return None  # TODO fix me
+
+    TP,TN,FP,FN = calc_TP_TN_FP_FN=(ytrue_N,yhat_N)
+
+    acc = (TP+TN)/((TP+TN+FP+FN+1E-10))
+
+    return acc  
 
 
 
@@ -142,7 +153,11 @@ def calc_TPR(ytrue_N, yhat_N):
     # You should *use* your calc_TP_TN_FP_FN function from above
     # Hint: make sure denominator will never be exactly zero
     # by adding a small value like 1e-10
-    return None  # TODO fix me
+
+    TP,TN,FP,FN = calc_TP_TN_FP_FN=(ytrue_N,yhat_N)
+    tpr = TP/(TP+FN+1e-10)
+
+    return tpr  
 
 
 def calc_PPV(ytrue_N, yhat_N):
@@ -185,5 +200,8 @@ def calc_PPV(ytrue_N, yhat_N):
     # You should *use* your calc_TP_TN_FP_FN function from above
     # Hint: make sure denominator will never be exactly zero
     # by adding a small value like 1e-10
-    return None  # TODO fix me
 
+    TP,TN,FP,FN = calc_TP_TN_FP_FN=(ytrue_N,yhat_N)
+
+    ppv = TP/(TP+FP+1e-10)
+    return ppv  
