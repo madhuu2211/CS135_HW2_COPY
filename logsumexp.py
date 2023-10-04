@@ -67,7 +67,9 @@ def my_logsumexp(scores_N):
     scores_N = np.asarray(scores_N, dtype=np.float64)
 
     # See math on HW2 instructions page for the correct approach
-    m = 0.0  # TODO fix me: the maximum entry of the vector scores_N
-    logsumexp = 0.0  # TODO fix me: compute logsumexp in numerically stable way
+    m = np.max(scores_N)
 
-    return None   # TODO fix me
+    # Computing logsumexp in a numerically stable way 
+    logsumexp = m + np.log(np.sum(np.exp(scores_N - m)))
+
+    return logsumexp
