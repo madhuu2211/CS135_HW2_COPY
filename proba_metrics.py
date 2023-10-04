@@ -199,11 +199,14 @@ def calc_mean_binary_cross_entropy_from_scores(ytrue_N, scores_N):
     # Cast logit scores to float
     scores_N = np.asarray(scores_N, dtype=np.float64)  # dont touch
 
-    flipped_scores_N = np.zeros(N)  # TODO fix me: flip(y_n) s_n
+    # Flip the sign of scores
+    flipped_scores_N = -1 * scores_N 
 
-    scores_and_zeros_N2 = np.zeros((N, 2))  # TODO fix me: [0, flipped_scores_N]. Hint: stack two arrays of shape (N,1)
+     # Stack the flipped scores with an array of zeros
+    scores_and_zeros_N2 = np.column_stack((np.zeros(N), flipped_scores_N))
 
     # Be sure to use scipy_logsumexp from scipy to handle 2D arrays and handle empty input lists properly
-    bce_score = 0.0  # TODO fix me
+    # Compute the binary cross entropy using the logsumexp trick
+    bce = np.mean(logsumexp(scores_and_zeros_N2, axis=1))
 
-    return None  # TODO fix me
+    return bce 
