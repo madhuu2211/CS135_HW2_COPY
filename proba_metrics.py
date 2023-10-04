@@ -97,12 +97,12 @@ def calc_mean_binary_cross_entropy_from_probas(ytrue_N, yproba1_N):
     yproba1_N = np.maximum(1e-14, np.minimum(1-1e-14, yproba1_N)) # dont touch
 
     # be sure to handle empty input lists properly
-    bbce_N = -ytrue_N * np.log2(yproba1_N) - (1 - ytrue_N) * np.log2(1 - yproba1_N)
+    bce_prob = -ytrue_N * np.log2(yproba1_N) - (1 - ytrue_N) * np.log2(1 - yproba1_N)
 
     # Calculate mean binary cross entropy
     bce = np.mean(bce_N)
 
-    return bce  
+    return bce  # TODO fix me
 
 
 def calc_mean_binary_cross_entropy_from_scores(ytrue_N, scores_N):
