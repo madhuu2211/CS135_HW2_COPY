@@ -154,7 +154,7 @@ def calc_TPR(ytrue_N, yhat_N):
     # Hint: make sure denominator will never be exactly zero
     # by adding a small value like 1e-10
 
-    TP,FN = calc_TP_TN_FP_FN=(ytrue_N,yhat_N)
+    TP,FN = calc_TP_TN_FP_FN(ytrue_N,yhat_N)
     tpr = TP/(TP+FN+1e-10)
 
     return tpr  
@@ -201,7 +201,7 @@ def calc_PPV(ytrue_N, yhat_N):
     # Hint: make sure denominator will never be exactly zero
     # by adding a small value like 1e-10
 
-    TP,FP = calc_TP_TN_FP_FN=(ytrue_N,yhat_N)
+    TP,FP = calc_TP_TN_FP_FN(ytrue_N,yhat_N)
 
     ppv = TP/(TP+FP+1e-10)
     return ppv  
