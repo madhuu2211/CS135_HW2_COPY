@@ -73,3 +73,5 @@ def my_logsumexp(scores_N):
     logsumexp = m + np.log(np.sum(np.exp(scores_N - m)))
 
     return logsumexp
+
+
