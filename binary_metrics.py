@@ -64,10 +64,10 @@ def calc_TP_TN_FP_FN(ytrue_N, yhat_N):
     yhat_N = np.asarray(yhat_N, dtype=np.int32)
     
     # fix by calculating the number of true pos, true neg, etc.
-    TP = np.sum(np.logical_and(yhat_N == 1, ytrue_N == 1))
-    TN = np.sum(np.logical_and(yhat_N == 0, ytrue_N == 0))
-    FP = np.sum(np.logical_and(yhat_N == 1, ytrue_N == 0))
-    FN = np.sum(np.logical_and(yhat_N == 0, ytrue_N == 1))
+    TP = int(np.sum(np.logical_and(yhat_N == 1, ytrue_N == 1)))
+    TN = int(np.sum(np.logical_and(yhat_N == 0, ytrue_N == 0)))
+    FP = int(np.sum(np.logical_and(yhat_N == 1, ytrue_N == 0)))
+    FN = int(np.sum(np.logical_and(yhat_N == 0, ytrue_N == 1)))
     
     return TP,TN,FP,FN  
 
