@@ -68,6 +68,7 @@ def calc_TP_TN_FP_FN(ytrue_N, yhat_N):
     TN = np.sum(np.logical_and(yhat_N == 0, ytrue_N == 0))
     FP = np.sum(np.logical_and(yhat_N == 1, ytrue_N == 0))
     FN = np.sum(np.logical_and(yhat_N == 0, ytrue_N == 1))
+    
     return TP,TN,FP,FN  
 
 
@@ -107,7 +108,7 @@ def calc_ACC(ytrue_N, yhat_N):
 
     TP,TN,FP,FN = calc_TP_TN_FP_FN(ytrue_N,yhat_N)
 
-    acc = (TP+TN)/(TP+TN+FP+FN+1E-10)
+    acc = (TP+TN)/((TP+TN+FP+FN+1e-10))
 
     return acc  
 
@@ -154,7 +155,7 @@ def calc_TPR(ytrue_N, yhat_N):
     # Hint: make sure denominator will never be exactly zero
     # by adding a small value like 1e-10
 
-    TP,FN,_,_ = calc_TP_TN_FP_FN(ytrue_N,yhat_N)
+    TP, _, _, FN = calc_TP_TN_FP_FN(ytrue_N, yhat_N)
     tpr = TP/(TP+FN+1e-10)
 
     return tpr  
@@ -201,7 +202,7 @@ def calc_PPV(ytrue_N, yhat_N):
     # Hint: make sure denominator will never be exactly zero
     # by adding a small value like 1e-10
 
-    TP,FP,_,_ = calc_TP_TN_FP_FN(ytrue_N,yhat_N)
+    TP,_ ,FP ,_ = calc_TP_TN_FP_FN(ytrue_N,yhat_N)
 
     ppv = TP/(TP+FP+1e-10)
     return ppv  
