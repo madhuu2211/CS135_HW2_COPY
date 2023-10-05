@@ -92,17 +92,19 @@ def calc_mean_binary_cross_entropy_from_probas(ytrue_N, yproba1_N):
     # Cast labels to integer just to be sure we're getting what's expected
     ytrue_N = np.asarray(ytrue_N, dtype=np.int32)
     N = int(ytrue_N.size)
+    N = N + 1e-7
     # Cast probas to float and be sure we're between zero and one
     yproba1_N = np.asarray(yproba1_N, dtype=np.float64)           # dont touch
     yproba1_N = np.maximum(1e-14, np.minimum(1-1e-14, yproba1_N)) # dont touch
 
+    # yproba1_N = np.clip(yproba1_N, 1e-14, 1-1e-14) -- unsure 
     # be sure to handle empty input lists properly
-    bce_prob = -ytrue_N * np.log2(yproba1_N) - (1 - ytrue_N) * np.log2(1 - yproba1_N)
+    bce_N = -ytrue_N * np.log2(yproba1_N) - (1 - ytrue_N) * np.log2(1 - yproba1_N)
 
     # Calculate mean binary cross entropy
     bce = np.mean(bce_N)
 
-    return bce  # TODO fix me
+    return bce  
 
 
 def calc_mean_binary_cross_entropy_from_scores(ytrue_N, scores_N):
@@ -162,7 +164,7 @@ def calc_mean_binary_cross_entropy_from_scores(ytrue_N, scores_N):
     >>> perfect_bce2 = calc_mean_binary_cross_entropy_from_probas(
     ...     ytrue_N, sigmoid(perfect_scores_N))
     >>> print("%.6f" % (perfect_bce2))
-    0.000178
+    
 
     # Try some extreme scores (should get worse BCE with more extreme scores)
     >>> ans = calc_mean_binary_cross_entropy_from_scores([0], [+99.])
@@ -200,13 +202,44 @@ def calc_mean_binary_cross_entropy_from_scores(ytrue_N, scores_N):
     scores_N = np.asarray(scores_N, dtype=np.float64)  # dont touch
 
     # Flip the sign of scores
-    flipped_scores_N = -1 * scores_N 
+    flipped_scores_N = yflippedsign_N * scores_N # MAKES SENSE 
 
-     # Stack the flipped scores with an array of zeros
-    scores_and_zeros_N2 = np.column_stack((np.zeros(N), flipped_scores_N))
+    # Stack the flipped scores with an array of zeros
+    max_score = np.max(flipped_scores_N)
 
     # Be sure to use scipy_logsumexp from scipy to handle 2D arrays and handle empty input lists properly
     # Compute the binary cross entropy using the logsumexp trick
-    bce = np.mean(logsumexp(scores_and_zeros_N2, axis=1))
+    bce = np.log2(1 + scipy_logsumexp(flipped_scores_N)).mean()
 
-    return bce 
+    return bce
+
+'''
+# TESTING FOR calc_mean_binary_cross_entropy_from_scores ----------------
+N = 8
+ytrue_N = np.asarray([0., 0., 0., 0., 1., 1., 1., 1.])
+
+# Try some good scores for these 8 points.
+good_scores_N = np.asarray([-4., -3., -2., -1., 1, 2., 3., 4.])
+good_bce = calc_mean_binary_cross_entropy_from_scores(ytrue_N, good_scores_N)
+print("%.6f" % (good_bce))
+
+# Try some near-perfect scores for these 8 points.
+perfect_scores_N = np.asarray([-9., -9., -9,  -9., 9., 9., 9., 9.])
+perfect_bce = calc_mean_binary_cross_entropy_from_scores(ytrue_N, perfect_scores_N)
+print("%.6f" % (perfect_bce))
+
+# Check same computation with "probas". Should match exactly.
+perfect_bce2 = calc_mean_binary_cross_entropy_from_probas(ytrue_N, sigmoid(perfect_scores_N))
+print("%.6f" % (perfect_bce2))
+
+# Try some extreme scores (should get worse BCE with more extreme scores)
+ans = calc_mean_binary_cross_entropy_from_scores([0], [+99.])
+print("%.6f" % (ans))
+# 142.826809
+ans = calc_mean_binary_cross_entropy_from_scores([0], [+999.])
+print("%.6f" % (ans))
+#1441.252346
+ans = calc_mean_binary_cross_entropy_from_scores([0], [+9999.])
+print("%.6f" % (ans))
+# 14425.507714
+'''
