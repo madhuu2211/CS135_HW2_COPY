@@ -105,9 +105,9 @@ def calc_ACC(ytrue_N, yhat_N):
     # Hint: make sure denominator will never be exactly zero
     # by adding a small value like 1e-10
 
-    TP,TN,FP,FN = calc_TP_TN_FP_FN=(ytrue_N,yhat_N)
+    TP,TN,FP,FN = calc_TP_TN_FP_FN(ytrue_N,yhat_N)
 
-    acc = (TP+TN)/((TP+TN+FP+FN+1E-10))
+    acc = (TP+TN)/(TP+TN+FP+FN+1E-10)
 
     return acc  
 
